@@ -44,11 +44,13 @@ class ZenRDSDataSource(ZenPackPersistence,
     instance = '${here/zRDSInstance}'
     identity = '${here/zRDSIdentity}'
     key = '${here/zRDSKey}'
+    region = '${here/zRDSRegion}'
 
     _properties = BasicDataSource.BasicDataSource._properties + (
         {'id':'instance', 'type':'string', 'mode':'w'},
         {'id':'identity', 'type':'password', 'mode':'w'},
         {'id':'key', 'type':'password', 'mode':'w'},
+        {'id':'region', 'type':'string', 'mode':'w'},
         )
         
     def __init__(self, id, title=None, buildRelations=True):
@@ -67,6 +69,8 @@ class ZenRDSDataSource(ZenPackPersistence,
             parts.append('-S %s' % self.key)
         if self.instance:
             parts.append("-N '%s'" % self.instance)
+        if self.region:
+            parts.append("-R '%s'" % self.region)
         cmd = ' '.join(parts)
         cmd = BasicDataSource.BasicDataSource.getCommand(self, context, cmd)
         return cmd

@@ -3,7 +3,7 @@
 <!-- ('', 'zport', 'dmd', 'Devices', 'Server', 'RDS') -->
 <object id='/zport/dmd/Devices/Server/RDS' module='Products.ZenModel.DeviceClass' class='DeviceClass'>
 <property visible="True" type="lines" id="zDeviceTemplates" >
-['Device', 'ZenRDS']
+['ZenRDS']
 </property>
 <property visible="True" type="boolean" id="zSnmpMonitorIgnore" >
 True
@@ -47,6 +47,9 @@ ${here/zRDSIdentity}
 </property>
 <property type="password" id="key" mode="w" >
 ${here/zRDSKey}
+</property>
+<property type="password" id="region" mode="w" >
+${here/zRDSRegion}
 </property>
 <tomanycont id='datapoints'>
 <object id='AllocatedStorage' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>

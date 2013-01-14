@@ -4,6 +4,7 @@ import datetime
 from optparse import OptionParser
 try:
     import boto
+    import boto.rds
 except:
     print "Error importing Boto module. This is a pre-requisite."
     sys.exit(1)
@@ -11,10 +12,11 @@ except:
 
 
 class ZenossRDSPlugin:
-    def __init__(self, instance, identity, secret):
+    def __init__(self, instance, identity, secret, region):
         self.instance = instance
         self.identity = identity
         self.secret = secret
+	self.region = region
 
         self.metrics = ["CPUUtilization",
                         "DatabaseConnections",
@@ -34,9 +36,17 @@ class ZenossRDSPlugin:
 
         try:
             self.cw = boto.connect_cloudwatch(self.identity, self.secret, validate_certs=False)
-            self.rds = boto.connect_rds(self.identity, self.secret, validate_certs=False)
+	    self.rds = None
+            regions = boto.rds.regions()
+            for r in regions:
+                if r.name == self.region:
+                    self.rds = boto.connect_rds(self.identity, self.secret, region=r, validate_certs=False)
         except Exception, e:
             print "Boto Error: %s" % (e,)
+            sys.exit(1)
+
+	if self.rds is None:
+	    print "Boto Error: Unknown region %s" % (self.region)
             sys.exit(1)
 
 
@@ -78,11 +88,13 @@ if __name__ == "__main__":
             help='AWS/RDS Identity')
     parser.add_option('-S', '--secret', dest='secret',
             help='AWS/RDS Secret')
+    parser.add_option('-R', '--region', dest='region',
+            help='AWS/RDS Region')
     options, args = parser.parse_args()
     if not (options.instance and options.identity and options.secret):
         print "You must specify the instance, identity, secret parameters."
         sys.exit(1)
-
-    cmd = ZenossRDSPlugin(options.instance, options.identity, options.secret)
+ 
+    cmd = ZenossRDSPlugin(options.instance, options.identity, options.secret, options.region)
     cmd.run()
     sys.exit(0)

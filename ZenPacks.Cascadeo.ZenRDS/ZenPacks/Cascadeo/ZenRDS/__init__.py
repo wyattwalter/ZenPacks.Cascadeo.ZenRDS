@@ -18,5 +18,6 @@ class ZenPack(ZenPackBase):
             ('zRDSIdentity', '', 'password'),
             ('zRDSKey', '', 'password'),
             ('zRDSInstance', '', 'string'),
+	    ('zRDSRegion', 'us-east-1', 'string'),
             ]
 
