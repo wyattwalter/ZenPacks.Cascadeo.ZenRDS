@@ -19,29 +19,26 @@ I. Install Python-Boto on Zenoss Python environment
 2. Download Python Boto library from http://boto.googlecode.com/files/
 3. Untar and install it using python setup tools.
 
-II. Install Zenpack 
+II. Install Zenpack Code from GitHub
 
-1. Download the latest ZenPack here (attach link) 
-2. Login to your Zenoss instance. 
-3. Go to Advanced 
-4. Under Settings, select Zenpacks. 
-5. Click the gear button and select "Install Zenpack" 
-6. Locate ZenPacks.Cascadeo.ZenRDS. Upload. Click OK to install. 
-7. Restart the zopectl daemon. 
-8. In Advanced -> Settings -> Daemons, click the restart button for Zopectl daemon. 
-9. Wait for a few seconds and reload the Zenoss UI,
+1. On the zenoss host, clone the latest ZenRDS code 
+2. Change directory to the zenpack's root dir.
+3. Create egg package by executing `python setup.py bdist_egg`
+4. Install the generated egg package/zenpack. `zenpack --install <Zenpackname.egg>`
+5. Restart the zopectl and zeoctl daemons. 
+6. Wait for a few seconds and reload the Zenoss UI,
 
 III. Add your devices to /Server/RDS 
 
 1. The Zenpack will create /Server/RDS device class. 
 2. Put all RDS intances you want to monitor in /Server/RDS (under infrastructure tab)
-3. Disable Ping and SNMP monitoring for the device class.
+3. <s>Disable Ping and SNMP monitoring for the device class.</s>
 
 IV. Configure instance names and secret keys 
 
 1. Go to the "Configuration Properties" for the devie 
-2. Set the following fields: zRDSIdentity (your AWS identity number), zRDSKey (your AWS secret key) and zRDSInstance (the instance name of the RDS - this is the first column in the AWS RDS Console). Make sure that the key has at least read-only privilge to the RDS instance.
-3. Wait for the data to come in. 
+2. Set the following fields: zRDSIdentity (your AWS identity number), zRDSKey (your AWS secret key), zRDSInstance (the instance name of the RDS) and zRDSRegion (region where the instance is us-east-1, us-west-1, etc). Make sure that the key has at least read-only privilge to the RDS instance.
+3. Wait for the data to come in. Run zencommand to force collection.
 4. Configure threshold levels according to your need in the ZenRDS template.
 
 
