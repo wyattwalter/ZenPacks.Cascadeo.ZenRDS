@@ -5,6 +5,12 @@
 <property visible="True" type="lines" id="zDeviceTemplates" >
 ['Device', 'ZenRDS']
 </property>
+<property visible="True" type="boolean" id="zSnmpMonitorIgnore" >
+True
+</property>
+<property visible="True" type="boolwan" id="zPingMonitorIgnore" >
+True
+</property>
 <tomanycont id='rrdTemplates'>
 <object id='ZenRDS' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
 <property type="string" id="targetPythonClass" mode="w" >

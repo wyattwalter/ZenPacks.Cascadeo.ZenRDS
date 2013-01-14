@@ -29,12 +29,12 @@ class ZenossRDSPlugin:
                         "WriteThroughput",]
 
     def run(self):
-        end =  datetime.datetime.now()
+        end =  datetime.datetime.utcnow()
         start = end - datetime.timedelta(minutes=5)
 
         try:
-            self.cw = boto.connect_cloudwatch(self.identity, self.secret)
-            self.rds = boto.connect_rds(self.identity, self.secret)
+            self.cw = boto.connect_cloudwatch(self.identity, self.secret, validate_certs=False)
+            self.rds = boto.connect_rds(self.identity, self.secret, validate_certs=False)
         except Exception, e:
             print "Boto Error: %s" % (e,)
             sys.exit(1)
