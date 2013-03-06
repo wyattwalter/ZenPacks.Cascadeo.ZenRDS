@@ -64,9 +64,9 @@ class ZenRDSDataSource(ZenPackPersistence,
     def getCommand(self, context):
         parts = ['check_rds.py']
         if self.identity:
-            parts.append('-I %s' % self.identity)
+            parts.append("-I '%s'" % self.identity)
         if self.key:
-            parts.append('-S %s' % self.key)
+            parts.append("-S '%s'" % self.key)
         if self.instance:
             parts.append("-N '%s'" % self.instance)
         if self.region:
