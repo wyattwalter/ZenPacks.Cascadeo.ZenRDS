@@ -1,4 +1,4 @@
-#!/usr/local/zenoss/zenoss/bin/python
+#!/usr/bin/env python
 import sys
 import datetime
 from optparse import OptionParser
@@ -16,8 +16,7 @@ class ZenossRDSPlugin:
         self.instance = instance
         self.identity = identity
         self.secret = secret
-	self.region = region
-
+        self.region = region
         self.metrics = ["CPUUtilization",
                         "DatabaseConnections",
                         "FreeableMemory",
@@ -35,18 +34,19 @@ class ZenossRDSPlugin:
         start = end - datetime.timedelta(minutes=5)
 
         try:
-            self.cw = boto.connect_cloudwatch(self.identity, self.secret, validate_certs=False)
-	    self.rds = None
+            self.rds = None
             regions = boto.rds.regions()
             for r in regions:
                 if r.name == self.region:
+                    self.cw = boto.connect_cloudwatch(self.identity, self.secret, validate_certs=False)
+                    self.cw = boto.ec2.cloudwatch.connect_to_region(self.region, aws_access_key_id=self.identity, aws_secret_access_key=self.secret)
                     self.rds = boto.connect_rds(self.identity, self.secret, region=r, validate_certs=False)
         except Exception, e:
             print "Boto Error: %s" % (e,)
             sys.exit(1)
 
-	if self.rds is None:
-	    print "Boto Error: Unknown region %s" % (self.region)
+        if self.rds is None:
+            print "Boto Error: Unknown region %s" % (self.region)
             sys.exit(1)
 
 
@@ -56,18 +56,18 @@ class ZenossRDSPlugin:
             try:
                 s = self.cw.get_metric_statistics(60,start, end, metric, "AWS/RDS", "Average", {'DBInstanceIdentifier': self.instance})
             except Exception, e:
-		print "Boto Error: %s" % (e,)
-		sys.exit(1)
+                print "Boto Error: %s" % (e,)
+                sys.exit(1)
 
             if (len(s) != 0):
                 data[metric] = s[len(s)-1]['Average']
 
         # Get allocated storage for RDS instance
         try:
-	        inst = self.rds.get_all_dbinstances(self.instance)
+            inst = self.rds.get_all_dbinstances(self.instance)
         except Exception, e:
-                print "Boto Error: %s" % (e,)
-                sys.exit(1)
+            print "Boto Error: %s" % (e,)
+            sys.exit(1)
 
         if (len(inst) == 1):
             # Convert to GB
