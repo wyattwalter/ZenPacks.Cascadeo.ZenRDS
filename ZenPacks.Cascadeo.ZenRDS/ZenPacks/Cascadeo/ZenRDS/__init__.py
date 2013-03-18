@@ -15,9 +15,9 @@ class ZenPack(ZenPackBase):
     """
 
     packZProperties = [
-            ('zRDSIdentity', '', 'password'),
+            ('zRDSIdentity', '', 'string'),
             ('zRDSKey', '', 'password'),
             ('zRDSInstance', '', 'string'),
-	    ('zRDSRegion', 'us-east-1', 'string'),
+            ('zRDSRegion', 'us-east-1', 'string'),
             ]
 

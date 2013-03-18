@@ -48,7 +48,7 @@ class ZenRDSDataSource(ZenPackPersistence,
 
     _properties = BasicDataSource.BasicDataSource._properties + (
         {'id':'instance', 'type':'string', 'mode':'w'},
-        {'id':'identity', 'type':'password', 'mode':'w'},
+        {'id':'identity', 'type':'string', 'mode':'w'},
         {'id':'key', 'type':'password', 'mode':'w'},
         {'id':'region', 'type':'string', 'mode':'w'},
         )

@@ -3,7 +3,7 @@
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
 NAME = "ZenPacks.Cascadeo.ZenRDS"
-VERSION = "1.0"
+VERSION = "1.0.1"
 AUTHOR = "jerome@cascadeo.com"
 LICENSE = ""
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.Cascadeo']

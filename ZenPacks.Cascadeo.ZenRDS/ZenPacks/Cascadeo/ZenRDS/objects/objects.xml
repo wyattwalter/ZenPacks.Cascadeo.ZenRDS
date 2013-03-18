@@ -8,7 +8,7 @@
 <property visible="True" type="boolean" id="zSnmpMonitorIgnore" >
 True
 </property>
-<property visible="True" type="boolwan" id="zPingMonitorIgnore" >
+<property visible="True" type="boolean" id="zPingMonitorIgnore" >
 True
 </property>
 <tomanycont id='rrdTemplates'>
@@ -42,13 +42,13 @@ Nagios
 <property type="string" id="instance" mode="w" >
 ${here/zRDSInstance}
 </property>
-<property type="password" id="identity" mode="w" >
+<property type="string" id="identity" mode="w" >
 ${here/zRDSIdentity}
 </property>
 <property type="password" id="key" mode="w" >
 ${here/zRDSKey}
 </property>
-<property type="password" id="region" mode="w" >
+<property type="string" id="region" mode="w" >
 ${here/zRDSRegion}
 </property>
 <tomanycont id='datapoints'>
@@ -218,16 +218,16 @@ True
 </object>
 <object id='Disk Usage CRITICAL' module='Products.ZenModel.MinMaxThreshold' class='MinMaxThreshold'>
 <property label="DataPoints" type="lines" id="dsnames" mode="w" >
-['check_rds_DiskUsage']
+['check_rds_PercentDiskUsage']
 </property>
 <property label="Enabled" type="boolean" id="enabled" mode="w" >
 True
 </property>
 <property type="string" id="maxval" mode="w" >
-here.getRRDValue("AllocatedStorage") * 0.90
+90
 </property>
 <property type="string" id="eventClass" mode="w" >
-/Status/RDS
+/Perf/Snmp
 </property>
 <property type="int" id="severity" mode="w" >
 5
@@ -238,13 +238,13 @@ here.getRRDValue("AllocatedStorage") * 0.90
 </object>
 <object id='Disk Usage WARNING' module='Products.ZenModel.MinMaxThreshold' class='MinMaxThreshold'>
 <property label="DataPoints" type="lines" id="dsnames" mode="w" >
-['check_rds_DiskUsage']
+['check_rds_PercentDiskUsage']
 </property>
 <property label="Enabled" type="boolean" id="enabled" mode="w" >
 True
 </property>
 <property type="string" id="maxval" mode="w" >
-here.getRRDValue("AllocatedStorage") * 0.85
+85
 </property>
 <property type="string" id="eventClass" mode="w" >
 /Status/RDS
@@ -363,8 +363,14 @@ False
 <property type="boolean" id="hasSummary" mode="w" >
 True
 </property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <tomanycont id='graphPoints'>
 <object id='rds_CPUUtilization' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 LINE
 </property>
@@ -433,6 +439,9 @@ ${graphPoint/id}
 </property>
 </object>
 <object id='Connection Count WARNING' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property type="string" id="threshId" mode="w" >
 Connection Count WARNING
 </property>
@@ -464,6 +473,85 @@ ${graphPoint/id}
 </property>
 <property type="string" id="dpName" mode="w" >
 check_rds_DatabaseConnections
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='RDS Disk Usage Percent' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+0
+</property>
+<property type="int" id="maxy" mode="w" >
+100
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+7
+</property>
+<tomanycont id='graphPoints'>
+<object id='Disk Usage CRITICAL' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property type="string" id="threshId" mode="w" >
+Disk Usage CRITICAL
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+</object>
+<object id='Disk Usage WARNING' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property type="string" id="threshId" mode="w" >
+Disk Usage WARNING
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+</object>
+<object id='rds_PercentDiskUsage' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+check_rds_PercentDiskUsage
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -512,6 +600,9 @@ ${graphPoint/id}
 </property>
 </object>
 <object id='Disk Usage WARNING' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property type="string" id="threshId" mode="w" >
 Disk Usage WARNING
 </property>
@@ -638,6 +729,9 @@ True
 </property>
 <tomanycont id='graphPoints'>
 <object id='rds_ReadIOPS' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 AREA
 </property>
@@ -757,6 +851,9 @@ ${graphPoint/id}
 </property>
 </object>
 <object id='Write Latency WARNING' module='Products.ZenModel.ThresholdGraphPoint' class='ThresholdGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property type="string" id="threshId" mode="w" >
 Write Latency WARNING
 </property>
@@ -854,6 +951,9 @@ True
 </property>
 <tomanycont id='graphPoints'>
 <object id='rds_FreeableMemory' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 AREA
 </property>
@@ -940,6 +1040,9 @@ True
 </property>
 <tomanycont id='graphPoints'>
 <object id='rds_ReadThroughput' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
 AREA
 </property>
